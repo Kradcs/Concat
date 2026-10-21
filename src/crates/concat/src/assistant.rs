@@ -35,6 +35,14 @@ pub fn bind(app: &App) {
                 app.set_assistant_reply("Abra um projeto antes de pedir uma edição.".into());
                 return;
             };
+            let context = {
+                let studio = shell.studio.borrow();
+                serde_json::json!({
+                    "document": &document,
+                    "selectedClipIds": &studio.selection,
+                    "playheadSeconds": studio.playhead,
+                })
+            };
             let epoch = host::project_epoch();
             let config = Config {
                 endpoint: app.get_assistant_endpoint().to_string(),
@@ -46,7 +54,7 @@ pub fn bind(app: &App) {
             app.set_assistant_reply("Preparando proposta…".into());
             host::spawn(
                 move || {
-                    let result = concat_agent::propose(config, &prompt, &document);
+                    let result = concat_agent::propose(config, &prompt, &context);
                     (document, result)
                 },
                 move |studio, app, _, (document, result)| {
