@@ -31,6 +31,7 @@ mod ui {
     slint::include_modules!();
 }
 
+mod assistant;
 mod batch_volume;
 mod chips;
 mod dock;
@@ -346,6 +347,7 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
         models: Models::new(),
     });
     Shell::install(shell.clone());
+    assistant::bind(&app);
 
     // The machine's fonts, for the Text inspector's picker. Read on a
     // worker: on a machine with a few thousand faces it is a moment, and

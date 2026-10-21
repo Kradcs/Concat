@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Jareer Abdullah and Concat contributors
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme/theme.slint";
+import { Button, Field, Modal } from "../primitives/modal.slint";
+
+export component AssistantDialog inherits Modal {
+    in-out property <string> endpoint;
+    in-out property <string> model;
+    in-out property <string> api-key;
+    in-out property <string> prompt;
+    in property <string> reply;
+    in property <bool> busy;
+    in property <bool> can-apply;
+    callback ask();
+    callback apply-plan();
+    title: "Assistente de edição";
+    surface-width: 640px;
+    surface-height: 620px;
+    dismissable: !root.busy;
+    VerticalLayout {
+        padding: 20px;
+        spacing: 10px;
+        Text { text: "Serviço compatível com OpenAI (Ollama local ou HTTPS)"; color: Theme.fg; }
+        Field { value: root.endpoint; edited(text) => { root.endpoint = text; } }
+        HorizontalLayout {
+            spacing: 8px;
+            Field { value: root.model; placeholder: "Modelo"; edited(text) => { root.model = text; } }
+            Field { value: root.api-key; secret: true; placeholder: "Chave de API (só nesta sessão)"; edited(text) => { root.api-key = text; } }
+        }
+        Text {
+            text: "Ao enviar, os metadados do projeto (incluindo nomes e caminhos) serão enviados ao serviço escolhido. Arquivos de mídia não são enviados.";
+            wrap: word-wrap; color: Theme.fg-muted; font-size: Theme.fs-sm;
+        }
+        Field { value: root.prompt; placeholder: "Ex.: adicione um título de abertura por 3 segundos"; edited(text) => { root.prompt = text; } }
+        Button { label: root.busy ? "Preparando proposta…" : "Enviar pedido"; enabled: !root.busy && root.prompt != ""; primary: true; clicked => { root.ask(); } }
+        ScrollView { vertical-stretch: 1; Text { text: root.reply; color: Theme.fg; wrap: word-wrap; } }
+        Text { text: "Revise a proposta. Aplicar cria uma única edição, que pode ser desfeita com Ctrl+Z."; wrap: word-wrap; color: Theme.fg-muted; font-size: Theme.fs-sm; }
+        Button { label: "Aplicar proposta"; primary: true; enabled: root.can-apply && !root.busy; clicked => { root.apply-plan(); } }
+    }
+}

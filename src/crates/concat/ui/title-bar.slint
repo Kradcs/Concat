@@ -148,6 +148,7 @@ export component TitleBar inherits Rectangle {
     /// A view was picked from the add-panel list.
     callback add-pane(kind: PaneKind);
     callback export-clicked();
+    callback open-assistant();
 
     height: 32px;
     // The window's ground, not a panel's: the strip is the frame the panes
@@ -259,6 +260,8 @@ export component TitleBar inherits Rectangle {
                 added(kind) => { root.add-pane(kind); }
             }
         }
+
+        if !root.minimal: MenuLabel { label: "Assistente"; clicked => { root.open-assistant(); } }
 
         // The one control that is on both screens, and the theme's sun and
         // moon gave it the job when they moved into Settings > Appearance.

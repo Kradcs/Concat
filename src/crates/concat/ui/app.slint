@@ -9,6 +9,7 @@
 // it. The files live with the title painter (concat-text/fonts), which
 // embeds the same five so a title is set in the face the interface is.
 // Licensed under the SIL Open Font License; see LICENSE-HankenGrotesk.txt.
+import { AssistantDialog } from "dialogs/assistant.slint";
 import { I18n } from "i18n.slint";
 import "../../concat-text/fonts/HankenGrotesk-Regular.ttf";
 import "../../concat-text/fonts/HankenGrotesk-Medium.ttf";
@@ -72,6 +73,16 @@ export {
 }
 
 export component App inherits Window {
+    in-out property <bool> assistant-open;
+    in-out property <string> assistant-endpoint: "http://localhost:11434/v1/chat/completions";
+    in-out property <string> assistant-model: "qwen2.5:7b";
+    in-out property <string> assistant-key;
+    in-out property <string> assistant-prompt;
+    in-out property <string> assistant-reply: "Descreva a edição que deseja fazer nos vídeos ou fotos da timeline.";
+    in-out property <bool> assistant-busy;
+    in-out property <bool> assistant-can-apply;
+    callback assistant-ask();
+    callback assistant-apply();
     title: "Concat";
     // The taskbar's and Alt-Tab's picture on Windows, and the window
     // list's on X11. A Mac takes its Dock icon from the bundle and ignores
@@ -121,7 +132,7 @@ export component App inherits Window {
             keys.focus();
         }
     }
-    property <bool> sheet-open: root.export.open || root.settings.open
+    property <bool> sheet-open: root.assistant-open || root.export.open || root.settings.open
         || root.project-sheet.open || root.captions.open || root.speech.open
         || root.start.composing;
     changed sheet-open => {
@@ -510,6 +521,10 @@ export component App inherits Window {
             // finishes the activity, so Back with Export or a sheet open
             // quit the app, a running export with it.
             if (event.text == Key.Escape || event.text == Key.Back) {
+                if (root.assistant-open) {
+                    if (!root.assistant-busy) { root.assistant-open = false; }
+                    return accept;
+                }
                 if (root.confirm.open) { root.confirm-dismissed(); return accept; }
                 if (root.relink.open) { root.relink-dismiss(); return accept; }
                 if (root.project-sheet.open) { root.project-closed(); return accept; }
@@ -594,6 +609,7 @@ export component App inherits Window {
                 toggle-maximize => { root.titlebar-toggle-maximize(); }
                 minimize => { root.titlebar-minimize(); }
                 close => { root.titlebar-close(); }
+                open-assistant => { root.assistant-open = true; }
                 open-settings => { root.open-settings(); }
                 add-pane(kind) => { Editor.dock-add(kind); }
                 export-clicked => { root.export-clicked(); }
@@ -987,6 +1003,21 @@ export component App inherits Window {
     // failed behind a dialog is exactly the case a notice is for. It takes no
     // events — there is no TouchArea anywhere in it — so covering the window
     // costs the window nothing.
+    AssistantDialog {
+        open: root.assistant-open;
+        fill: root.sheets-fill;
+        endpoint <=> root.assistant-endpoint;
+        model <=> root.assistant-model;
+        api-key <=> root.assistant-key;
+        prompt <=> root.assistant-prompt;
+        reply: root.assistant-reply;
+        busy: root.assistant-busy;
+        can-apply: root.assistant-can-apply;
+        closed => { root.assistant-open = false; }
+        ask => { root.assistant-ask(); }
+        apply-plan => { root.assistant-apply(); }
+    }
+
     ToastLayer {
         x: 0;
         y: 0;

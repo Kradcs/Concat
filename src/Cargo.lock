@@ -1133,6 +1133,7 @@ name = "concat"
 version = "0.2.8"
 dependencies = [
  "block2 0.6.2",
+ "concat-agent",
  "concat-api",
  "concat-core",
  "concat-effects",
@@ -1163,6 +1164,18 @@ dependencies = [
  "wayland-client",
  "wgpu",
  "winresource",
+]
+
+[[package]]
+name = "concat-agent"
+version = "0.2.8"
+dependencies = [
+ "concat-project",
+ "schemars",
+ "serde",
+ "serde_json",
+ "ureq 2.12.1",
+ "url",
 ]
 
 [[package]]
