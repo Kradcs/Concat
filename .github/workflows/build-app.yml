@@ -562,6 +562,15 @@ jobs:
               tail -n 150 src/build.log
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
+            # Surface the diagnostic on the public run page as well: raw
+            # logs and, on some GitHub views, summaries require a login.
+            python - <<'PYDIAGNOSTIC'
+          from pathlib import Path
+          lines = Path("src/build.log").read_text(encoding="utf-8", errors="replace").splitlines()
+          tail = "\n".join(lines[-100:])[-12000:]
+          escaped = tail.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+          print("::error title=Compiler diagnostic::" + escaped)
+          PYDIAGNOSTIC
           fi
 
       # ── Package: macOS ─────────────────────────────────────────────────
