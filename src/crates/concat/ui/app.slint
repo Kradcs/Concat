@@ -74,8 +74,8 @@ export {
 
 export component App inherits Window {
     in-out property <bool> assistant-open;
-    in-out property <string> assistant-endpoint: "http://localhost:11434/v1/chat/completions";
-    in-out property <string> assistant-model: "qwen2.5:7b";
+    in-out property <string> assistant-endpoint: "https://api.openai.com/v1/chat/completions";
+    in-out property <string> assistant-model: "gpt-4.1";
     in-out property <string> assistant-key;
     in-out property <string> assistant-prompt;
     in-out property <string> assistant-reply: "Descreva a edição que deseja fazer nos vídeos ou fotos da timeline.";

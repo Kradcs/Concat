@@ -13,8 +13,7 @@ cortadas na timeline e transformadas como os vídeos.
   `OLLAMA_CONTEXT_LENGTH=32768 ollama serve`). Use `http://localhost:11434/v1/chat/completions`,
   modelo `qwen2.5:7b`, sem chave. Um modelo maior costuma gerar comandos mais
   confiáveis; o computador precisa ter recursos para executá-lo.
-- **OpenAI:** use `https://api.openai.com/v1/chat/completions`, o nome de um
-  modelo disponível na sua conta e sua chave no campo protegido.
+- **OpenAI:** use `https://api.openai.com/v1/chat/completions`, modelo `gpt-4.1` (ou outro compatível disponível na sua conta) e sua chave no campo protegido.
 - **Outros serviços:** informe a URL completa de chat completions, modelo e
   chave de um serviço compatível com OpenAI. HTTP é aceito só em loopback;
   serviços remotos precisam de HTTPS. Redirecionamentos não são seguidos.
@@ -44,7 +43,7 @@ Os testes usam um serviço HTTP controlado e o motor real para verificar a
 integração, respostas inválidas, transações atômicas e desfazer. Esses testes
 não medem a qualidade das respostas de um modelo real.
 
-O workflow **Assistant preview download** compila os instaladores de desktop,
+O workflow **Assistant preview download** compila os instaladores Windows x64,
 usa as verificações de inicialização do workflow existente e publica uma
 pré-release `assistant-<commit>` somente se todos os builds passarem.
 A execução requer GitHub Actions habilitado e permissão para criar releases.

@@ -32,6 +32,8 @@ jobs:
     uses: ./.github/workflows/build-app.yml
     with:
       ref: ${{ github.sha }}
+      targets: >-
+        [{"platform": "windows", "arch": "x86_64", "os": "windows-2022", "target": "x86_64-pc-windows-msvc", "ffmpeg": "win64", "sherpa": "win-x64", "ort": "win-x64", "llvm": "win64", "vc": "x64", "inno": "x64compatible", "wix": "x64", "ggml": "variants"}]
 
   download:
     needs: build
@@ -56,7 +58,7 @@ jobs:
           tag="assistant-${COMMIT:0:12}"
           mapfile -d '' files < <(find installers -type f \( -name '*.exe' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.AppImage' -o -name '*.dmg' -o -name '*.pkg.tar.zst' \) -print0)
           test "${#files[@]}" -gt 0
-          sha256sum "${files[@]}" > installers/SHA256SUMS.txt
+          (cd installers; sha256sum -- *.exe *.msi) > installers/SHA256SUMS.txt
           gh release create "$tag" "${files[@]}" installers/SHA256SUMS.txt \
             --repo "$GH_REPO" --target "$COMMIT" --prerelease \
             --title "Concat — assistente de edição (prévia ${COMMIT:0:7})" \
