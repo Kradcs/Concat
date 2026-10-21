@@ -94,3 +94,9 @@ whisper.dll                    48    0     0      0          0
 # Haswell fails the build.
 concat.exe                     -     -     ~1000  -          -
 concat                         -     -     ~1000  -          -
+
+# The pinned official Codex CLI is a separate, optional assistant process.
+# Like Concat it includes Rust's dispatched memchr and cryptographic kernels.
+# Keep the provisional BMI warning and also start it under SDE below; this
+# does not exempt Concat or any of its media libraries from their own limits.
+codex.exe                      -     -     ~1000  -          -

@@ -74,6 +74,9 @@ export {
 
 export component App inherits Window {
     in-out property <bool> assistant-open;
+    in-out property <bool> assistant-chatgpt: true;
+    in-out property <bool> assistant-signed-in;
+    in-out property <string> assistant-account-status: "Entre com sua conta do ChatGPT para usar os limites do seu plano.";
     in-out property <string> assistant-endpoint: "https://api.openai.com/v1/chat/completions";
     in-out property <string> assistant-model: "gpt-4.1";
     in-out property <string> assistant-key;
@@ -83,6 +86,10 @@ export component App inherits Window {
     in-out property <bool> assistant-can-apply;
     callback assistant-ask();
     callback assistant-apply();
+    callback assistant-refresh();
+    callback assistant-login();
+    callback assistant-logout();
+    callback assistant-cancel();
     title: "Concat";
     // The taskbar's and Alt-Tab's picture on Windows, and the window
     // list's on X11. A Mac takes its Dock icon from the bundle and ignores
@@ -609,7 +616,7 @@ export component App inherits Window {
                 toggle-maximize => { root.titlebar-toggle-maximize(); }
                 minimize => { root.titlebar-minimize(); }
                 close => { root.titlebar-close(); }
-                open-assistant => { root.assistant-open = true; }
+                open-assistant => { root.assistant-open = true; root.assistant-refresh(); }
                 open-settings => { root.open-settings(); }
                 add-pane(kind) => { Editor.dock-add(kind); }
                 export-clicked => { root.export-clicked(); }
@@ -1007,6 +1014,9 @@ export component App inherits Window {
         open: root.assistant-open;
         fill: root.sheets-fill;
         endpoint <=> root.assistant-endpoint;
+        chatgpt <=> root.assistant-chatgpt;
+        signed-in: root.assistant-signed-in;
+        account-status: root.assistant-account-status;
         model <=> root.assistant-model;
         api-key <=> root.assistant-key;
         prompt <=> root.assistant-prompt;
@@ -1016,6 +1026,9 @@ export component App inherits Window {
         closed => { root.assistant-open = false; }
         ask => { root.assistant-ask(); }
         apply-plan => { root.assistant-apply(); }
+        login => { root.assistant-login(); }
+        logout => { root.assistant-logout(); }
+        cancel => { root.assistant-cancel(); }
     }
 
     ToastLayer {

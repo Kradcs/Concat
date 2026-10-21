@@ -1,5 +1,16 @@
 # Third-party notices
 
+## OpenAI Codex (optional ChatGPT assistant)
+
+The Windows x64 installer includes the official native Codex CLI 0.163.0
+as a separate process in `codex/codex.exe`. Concat uses its documented login
+and non-interactive execution interface; it does not implement or intercept
+ChatGPT authentication. Codex is Apache-2.0 licensed. The upstream LICENSE
+and NOTICE are distributed beside the binary and preserved in `assets/codex`.
+Source: https://github.com/openai/codex/tree/rust-v0.163.0 .
+The upstream package and its published SHA-256 digest are pinned in
+`scripts/ci/deps.lock`. No model weights or account subscription are included.
+
 ## FFmpeg
 
 Concat links FFmpeg's libraries - libavformat, libavcodec, libavfilter,

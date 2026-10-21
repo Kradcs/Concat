@@ -173,6 +173,12 @@ Expect-Ok "concat.exe --version" $exe @("--version") $bare 60
 Say "concat.exe --smoke, with only Windows on the path"
 Expect-Ok "concat.exe --smoke" $exe @("--smoke") $bare 180
 
+$codex = Join-Path $bundle "codex\codex.exe"
+if (Test-Path $codex) {
+  Say "bundled Codex --version, with only Windows on the path"
+  Expect-Ok "Codex --version" $codex @("--version") $bare 60
+}
+
 # ── 4. On an emulated Ivy Bridge ───────────────────────────────────────
 if ($Sde) {
   Say "concat.exe --version on an emulated Ivy Bridge"
@@ -180,6 +186,10 @@ if ($Sde) {
   # The emulator's own folder too: it loads its pieces from beside itself.
   $path = (Split-Path $sdeExe) + ";" + $bare
   Expect-Ok "concat.exe --version under SDE -ivb" $sdeExe @("-ivb", "--", $exe, "--version") $path 600
+  if (Test-Path $codex) {
+    Say "bundled Codex --version on an emulated Ivy Bridge"
+    Expect-Ok "Codex --version under SDE -ivb" $sdeExe @("-ivb", "--", $codex, "--version") $path 600
+  }
 
   # whisper's CPU kernels, one DLL per CPU generation: ggml loads every
   # one to score it against the CPU before it keeps the best, so the

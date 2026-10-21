@@ -2487,6 +2487,7 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
             log::warn!("close: the activity ended and the project could not be saved: {error}");
         }
     });
+    assistant::stop();
     stop_exports();
     drop(startup_mark);
     leave(0);

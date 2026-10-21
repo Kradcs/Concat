@@ -1022,6 +1022,21 @@ jobs:
           }
           Get-ChildItem $dir | Format-Table Name, Length
 
+      - name: Include the native ChatGPT assistant (Windows x64)
+        if: matrix.platform == 'windows' && matrix.arch == 'x86_64'
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          scripts/ci/fetch.sh codex-windows-x64 codex.tar.gz
+          mkdir -p codex-unpacked
+          tar -xzf codex.tar.gz -C codex-unpacked bin/codex.exe
+          dest="stage/Concat-${VERSION}-windows-x86_64/codex"
+          mkdir -p "$dest"
+          cp codex-unpacked/bin/codex.exe "$dest/"
+          cp assets/codex/LICENSE assets/codex/NOTICE "$dest/"
+
       # Authenticode, with the repository's certificate when it has one:
       # every program and DLL in the folder that does not already carry a
       # valid signature (Microsoft's ONNX Runtime does, and keeps it), here,

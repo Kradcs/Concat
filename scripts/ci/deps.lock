@@ -57,3 +57,7 @@ llvm-woa64                   https://github.com/llvm/llvm-project/releases/downl
 # bundles promise to start on. See scripts/ci/smoke-*.
 sde-win                      https://downloadmirror.intel.com/924984/sde-external-10.13.1-2026-07-28-win.tar.xz                    74e626ede09b0baa5011fc9e51b58627ea92c3fc0bae5fd7db34b490f335f651
 sde-lin                      https://downloadmirror.intel.com/924984/sde-external-10.13.1-2026-07-28-lin.tar.xz                    94e97d623fec54385686e1e7ba65ebc9941748c05ee451423948334892bf2b50
+# Codex is a separate process used only by the ChatGPT assistant. Package
+# digests are published in openai/codex's codex-package_SHA256SUMS.
+codex-windows-x64 https://github.com/openai/codex/releases/download/rust-v0.163.0/codex-package-x86_64-pc-windows-msvc.tar.gz 901028b285614a9974f431f9d9f6534b3e5ed8d62eba4ba64f4762c00f040522
+codex-linux-x64 https://github.com/openai/codex/releases/download/rust-v0.163.0/codex-package-x86_64-unknown-linux-musl.tar.gz 582646c6bf0561eb0de540f7fc85b9121b0091a826bc6e96830b7f1722122182

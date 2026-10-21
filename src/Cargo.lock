@@ -1171,9 +1171,11 @@ name = "concat-agent"
 version = "0.2.8"
 dependencies = [
  "concat-project",
+ "dirs",
  "schemars",
  "serde",
  "serde_json",
+ "tempfile",
  "ureq 2.12.1",
  "url",
 ]

@@ -14,7 +14,16 @@ concurrency:
 
 jobs:
   agent-tests:
-    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            codex: codex-linux-x64
+            executable: codex
+          - os: windows-2022
+            codex: codex-windows-x64
+            executable: codex.exe
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -22,6 +31,14 @@ jobs:
         with:
           toolchain: 1.93.1
           components: clippy,rustfmt
+      - name: Verify the native Codex package
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/ci/fetch.sh '${{ matrix.codex }}' codex.tar.gz
+          mkdir codex-test
+          tar -xzf codex.tar.gz -C codex-test 'bin/${{ matrix.executable }}'
+          echo "CONCAT_TEST_CODEX=$(pwd -W 2>/dev/null || pwd)/codex-test/bin/${{ matrix.executable }}" >> "$GITHUB_ENV"
       - run: cargo test --locked -p concat-agent
         working-directory: src
       - run: cargo clippy --locked -p concat-agent --all-targets -- -D warnings
@@ -62,4 +79,4 @@ jobs:
           gh release create "$tag" "${files[@]}" installers/SHA256SUMS.txt \
             --repo "$GH_REPO" --target "$COMMIT" --prerelease \
             --title "Concat — assistente de edição (prévia ${COMMIT:0:7})" \
-            --notes "Prévia do assistente integrado: abra um projeto e use Assistente. Configure Ollama local ou um serviço compatível com OpenAI, envie um pedido, revise e aplique a proposta. As edições podem ser desfeitas. Modelos e chaves não estão incluídos. Os instaladores passaram pelas verificações de inicialização do fluxo Build app; a qualidade das respostas depende do modelo escolhido."
+            --notes "Assistente com login ChatGPT via Codex: abra um projeto, clique em Assistente e Entrar com ChatGPT. Conclua o login no navegador com sua conta Plus, envie o pedido, revise e aplique. Usa os limites de Codex da assinatura; não requer créditos de API. API e Ollama continuam opcionais. Edições podem ser desfeitas. Codex nativo incluído, sem Node.js. Testes de subprocesso, motor e inicialização Windows executados em CI; login e inferência com uma conta real precisam ser concluídos pelo usuário e não são testados automaticamente."
