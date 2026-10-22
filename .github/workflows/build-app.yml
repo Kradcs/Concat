@@ -1031,10 +1031,14 @@ jobs:
           set -euo pipefail
           scripts/ci/fetch.sh codex-windows-x64 codex.tar.gz
           mkdir -p codex-unpacked
-          tar -xzf codex.tar.gz -C codex-unpacked bin/codex.exe
+          # Current model catalogs can require code_mode_only even when its
+          # optional feature flag is off. Ship the official native runtime
+          # beside the CLI so those models can initialize successfully.
+          tar -xzf codex.tar.gz -C codex-unpacked bin/codex.exe bin/codex-code-mode-host.exe
           dest="stage/Concat-${VERSION}-windows-x86_64/codex"
           mkdir -p "$dest"
           cp codex-unpacked/bin/codex.exe "$dest/"
+          cp codex-unpacked/bin/codex-code-mode-host.exe "$dest/"
           cp assets/codex/LICENSE assets/codex/NOTICE "$dest/"
 
       # Authenticode, with the repository's certificate when it has one:

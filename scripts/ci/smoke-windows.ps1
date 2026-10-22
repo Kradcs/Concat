@@ -177,6 +177,9 @@ $codex = Join-Path $bundle "codex\codex.exe"
 if (Test-Path $codex) {
   Say "bundled Codex --version, with only Windows on the path"
   Expect-Ok "Codex --version" $codex @("--version") $bare 60
+  $codeHost = Join-Path $bundle "codex\codex-code-mode-host.exe"
+  if (-not (Test-Path $codeHost)) { throw "Codex's native runtime is missing from the bundle" }
+  Expect-Ok "Codex native runtime --help" $codeHost @("--help") $bare 60
 }
 
 # ── 4. On an emulated Ivy Bridge ───────────────────────────────────────
@@ -189,6 +192,7 @@ if ($Sde) {
   if (Test-Path $codex) {
     Say "bundled Codex --version on an emulated Ivy Bridge"
     Expect-Ok "Codex --version under SDE -ivb" $sdeExe @("-ivb", "--", $codex, "--version") $path 600
+    Expect-Ok "Codex native runtime --help under SDE -ivb" $sdeExe @("-ivb", "--", $codeHost, "--help") $path 600
   }
 
   # whisper's CPU kernels, one DLL per CPU generation: ggml loads every

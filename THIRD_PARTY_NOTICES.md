@@ -3,7 +3,8 @@
 ## OpenAI Codex (optional ChatGPT assistant)
 
 The Windows x64 installer includes the official native Codex CLI 0.163.0
-as a separate process in `codex/codex.exe`. Concat uses its documented login
+as a separate process in `codex/codex.exe`, together with its native
+`codex-code-mode-host.exe` runtime. Concat uses its documented login
 and non-interactive execution interface; it does not implement or intercept
 ChatGPT authentication. Codex is Apache-2.0 licensed. The upstream LICENSE
 and NOTICE are distributed beside the binary and preserved in `assets/codex`.

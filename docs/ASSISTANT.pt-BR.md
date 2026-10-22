@@ -8,7 +8,8 @@ cortadas na timeline e transformadas como os vídeos.
 
 ## Usar sua assinatura ChatGPT Plus
 
-O instalador Windows x64 inclui o Codex nativo da OpenAI. Não é preciso instalar
+O instalador Windows x64 inclui o Codex nativo da OpenAI e o runtime nativo
+exigido pelos modelos atuais. Não é preciso instalar
 Node.js nem criar uma chave de API.
 
 1. Abra um projeto e clique em **Assistente**.

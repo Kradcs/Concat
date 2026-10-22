@@ -163,6 +163,23 @@ fn pinned_official_cli_accepts_config_and_requires_login() {
         home: dir.path().join("codex"),
     };
     codex.prepare().unwrap();
+    let runtime = codex.executable.parent().unwrap().join(if cfg!(windows) {
+        "codex-code-mode-host.exe"
+    } else {
+        "codex-code-mode-host"
+    });
+    assert!(
+        runtime.is_file(),
+        "The official native model runtime must ship beside Codex"
+    );
+    assert!(
+        Command::new(runtime)
+            .arg("--help")
+            .output()
+            .unwrap()
+            .status
+            .success()
+    );
     let mut command = codex.command();
     command.args(["features", "list"]);
     let output = command.output().unwrap();

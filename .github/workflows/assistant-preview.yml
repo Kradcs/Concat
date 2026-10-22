@@ -20,9 +20,11 @@ jobs:
           - os: ubuntu-24.04
             codex: codex-linux-x64
             executable: codex
+            host: codex-code-mode-host
           - os: windows-2022
             codex: codex-windows-x64
             executable: codex.exe
+            host: codex-code-mode-host.exe
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
@@ -37,7 +39,7 @@ jobs:
           set -euo pipefail
           scripts/ci/fetch.sh '${{ matrix.codex }}' codex.tar.gz
           mkdir codex-test
-          tar -xzf codex.tar.gz -C codex-test 'bin/${{ matrix.executable }}'
+          tar -xzf codex.tar.gz -C codex-test 'bin/${{ matrix.executable }}' 'bin/${{ matrix.host }}'
           echo "CONCAT_TEST_CODEX=$(pwd -W 2>/dev/null || pwd)/codex-test/bin/${{ matrix.executable }}" >> "$GITHUB_ENV"
       - run: cargo test --locked -p concat-agent
         working-directory: src

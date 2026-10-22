@@ -61,7 +61,12 @@ impl Codex {
             .ok_or("Não foi possível localizar o aplicativo.")?
             .join("codex")
             .join(if cfg!(windows) { "codex.exe" } else { "codex" });
-        if !executable.is_file() {
+        let runtime = executable.with_file_name(if cfg!(windows) {
+            "codex-code-mode-host.exe"
+        } else {
+            "codex-code-mode-host"
+        });
+        if !executable.is_file() || !runtime.is_file() {
             return Err("O componente Codex não foi encontrado. Instale a versão do Concat com login ChatGPT.".into());
         }
         let home = dirs::data_local_dir()
