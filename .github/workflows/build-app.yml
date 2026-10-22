@@ -1135,7 +1135,10 @@ jobs:
       # scripts/ci/isa-allow.txt allows each one. See scripts/ci/isa-scan.sh.
       - name: Instruction-set scan (Windows x86_64)
         if: matrix.platform == 'windows' && matrix.arch == 'x86_64'
-        timeout-minutes: 15
+        # The bundled native Codex CLI adds about 262 MiB of machine code.
+        # Disassembling the entire bundle exceeded the former 15-minute limit;
+        # keep the full scan and give it time to finish on the Windows runner.
+        timeout-minutes: 45
         shell: bash
         env:
           VERSION: ${{ steps.version.outputs.version }}
